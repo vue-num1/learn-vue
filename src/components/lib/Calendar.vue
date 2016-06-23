@@ -1,10 +1,18 @@
+<template>
+    <section>
+        <input  placeholder="{{placeholder}}" v-el:date type="date" class="datepicker">
+    </section>
+</template>
+
+<script>
 require('../js/lib/picker.date.js')
-let _template = `<section><input  placeholder="{{placeholder}}" v-el:date type="date" class="datepicker"> </section>`;
+
+
 export default {
-    template: _template,
+    name: 'Calendar',
     props: {
-        placeholder:String,
-        val:Number,
+        placeholder: String,
+        val: Number,
         setDate: Function
     },
     methods:{
@@ -27,4 +35,5 @@ export default {
             selectYears: 15 // Creates a dropdown of 15 years to control year
         });
     }
-}
+};
+</script>

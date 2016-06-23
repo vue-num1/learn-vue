@@ -6,7 +6,8 @@
   "scripts": {
     "start": "webpack --watch",
     "test": "test",
-    "dev": "browser-sync start --server --files \"**/*\" --directory --open \"external\""
+    "dev": "browser-sync start --server --files \"**/*\" --directory --open \"external\"",
+    "hot": "webpack-dev-server --config webpack.config.hot.js"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,8 @@
     "moment": "^2.13.0",
     "vue": "^1.0.21",
     "vue-datepicker": "^1.2.0",
+    "vue-router": "^0.7.13",
+    "vuex": "^0.6.3",
     "wilddog": "^0.6.3"
   },
   "devDependencies": {
@@ -50,6 +53,7 @@
     "vue-html-loader": "^1.2.2",
     "vue-loader": "^8.5.2",
     "vue-style-loader": "^1.0.0",
-    "webpack": "^1.12.15"
+    "webpack": "^1.12.15",
+    "webpack-dev-server": "^1.14.1"
   }
 }
