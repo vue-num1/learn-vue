@@ -4,7 +4,7 @@ test request
 
 
 
-
+### Usage
 
 
 ```npm run hot``` for develop
@@ -14,7 +14,7 @@ test request
 
 
 
-日志：
+### 更新日志：
 
 * 新增路由支持：[vue-router 文档](http://router.vuejs.org/zh-cn/basic.html)
 * 改用 vuex 作为 store：[vuex 文档](http://vuex.vuejs.org/zh-cn/tutorial.html)
