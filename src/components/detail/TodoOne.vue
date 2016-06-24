@@ -9,7 +9,8 @@
                 <div v-show="isEditMode || !todoId" >
                     <input
                         placeholder="todo content"
-                        v-el:editinput :autofocus="!todoId" type="text" @keyup.enter="saveTodo" @click.stop v-model="todoItem.text" lazy />
+                        v-el:editinput :autofocus="!todoId" type="text" @keyup.enter="saveTodo" v-model="todoItem.text" lazy />
+                        <textarea v-model="todoItem.content" rows="4" @keyup.enter="saveTodo"></textarea>
                 </div>
                 <div :class="{'done-todo':todoItem.done}" v-else >
                     <div class="todoItem-title">{{todoItem.text}}</div>
@@ -41,6 +42,7 @@ import {
 const initTodo = {
     id: null,
     text: '',
+    content:'',
     done: false,
     time: ''
 };
