@@ -6,7 +6,7 @@ import {
 import noticeJob from '../js/notice-job';
 
 
-const DBUrl = 'https://weifei365.wilddogio.com/';
+const DBUrl = 'https://todoyonghua110.wilddogio.com/';
 
 export const setTopMsg = function({ dispatch, state }, msg) {
     dispatch(NEW_TOP_MSG, msg);
