@@ -100,12 +100,14 @@ export default {
 
             self.isAdding = true;
             self.updateTodoByIdAction(self.todoItem).then(function(isNew) {
-                self.setTopMsgAction(isNew ? '新增成功' : '更新成功');
                 self.disableEdit();
                 self.isAdding = false;
+
+                self.setTopMsgAction(isNew ? '新增成功' : '更新成功');
             }, function(errMsg) {
-                self.setTopMsgAction(errMsg);
                 self.isAdding = false;
+
+                self.setTopMsgAction(errMsg);
             });
         },
         enableEdit() {

@@ -50,18 +50,14 @@ export const updateTodoById = function({ dispatch, state }, todoInfo) {
     }
 
     return new Promise(function(resolve, reject) {
-        new Wilddog(DBUrl).child(todoInfo.id).update(todoInfo, (errMsg) => {
+        new Wilddog(DBUrl).child(todoInfo.id).update(todoInfo, function(errMsg) {
             if (errMsg) {
                 reject(errMsg);
-                return;
+            } else {
+                resolve(isNew);
+                dispatch(UPDATE_TODO_BY_ID, todoInfo, isNew);
             }
-
-            resolve(isNew);
-            dispatch(UPDATE_TODO_BY_ID, todoInfo, isNew);
         });
-    }).then(() => {
-        noticeJob(todoInfo)
-        return Promise;
     });
 };
 

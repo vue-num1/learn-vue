@@ -27,24 +27,24 @@ export const mutations = {
     },
     [UPDATE_TODO_BY_ID](state, todoInfo, isNew) {
         const todoList = state.todoList;
-        let i = -1;
+        const todoListLen = todoList.length;
+        var i = -1;
 
         if (!isNew) {
             i = 0;
-            for (const l = todoList.length; i < l; i++) {
+            for (i = 0; i < l; i++) {
                 if (todoList[i].id === todoInfo.id) {
                     break;
                 }
             }
         }
 
-        if (i < 0) {
+        if (i < 0 || i >= todoListLen) {
             state.todoList = todoList.concat(todoInfo);
-            noticeJob(state.todoList);
-            return;
+        } else {
+            todoList[i] = todoInfo;
         }
 
-        todoList[i] = todoInfo;
         state.todoList = todoList;
         // noticeJob(todoList);
     },

@@ -3,7 +3,7 @@
         <todo-filter @change-status="changeStatus"></todo-filter>
         <ul class="collection">
             <li class="collection-item" style="padding:0" >
-                <todo-one :todo-item="defaultTodo" :todo-id="defaultTodo.id" ></todo-one>
+                <todo-one></todo-one>
             </li>
             <li class="collection-item" transition="expand" style="padding:0"
                 v-for="t in listData | filterBy filterStatus in 'done' | sortByStatus" track-by="$index">
@@ -41,25 +41,8 @@ export default {
     },
     data(){
         return {
-            filterStatus: null,
-            defaultTodo: {
-                id: null,
-                text: '',
-                done: false,
-                time: ''
-            }
+            filterStatus: null
         };
-    },
-    watch:{
-        listData() {
-            this.defaultTodo = {
-                id: null,
-                text: '',
-                done: false,
-                time: ''
-            }
-        }
-
     },
     methods:{
         changeStatus(_status){
