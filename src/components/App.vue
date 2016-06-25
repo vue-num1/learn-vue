@@ -1,6 +1,7 @@
 <template>
     <div class="app">
         <div class="bg"></div>
+        <top-msg></top-msg>
         <router-view></router-view>
         <top-nav></top-nav>
     </div>
@@ -9,13 +10,14 @@
 <script>
 import store from '../vuex/store.js';
 import TopNav from './menu/TopNav.vue';
+import TopMsg from './dialog/TopMsg.vue';
 
 
 export default {
     name: 'App',
     store,
     components: {
-        TopNav
+        TopNav, TopMsg
     }
 };
 </script>

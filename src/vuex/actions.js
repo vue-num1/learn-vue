@@ -1,18 +1,61 @@
 const Wilddog = require('wilddog');
 import {
-    ADD_USER, UPDATE_TODO_LIST, UPDATE_TODO_BY_ID, DELETE_TODO_BY_ID, NEW_TOP_MSG
+    REGISTER, UPDATE_TODO_LIST, UPDATE_TODO_BY_ID, DELETE_TODO_BY_ID, NEW_TOP_MSG, LOGIN
 } from './types.js';
 // import router from '../index.js';
 import noticeJob from '../js/notice-job';
 
 
-const DBUrl = 'https://todoyonghua110.wilddogio.com/todoList';
+const DBUrl = 'https://weifei365.wilddogio.com/';
 
 export const setTopMsg = function({ dispatch, state }, msg) {
     dispatch(NEW_TOP_MSG, msg);
 };
-export const addUser = function({ dispatch, state }, user) {
-    dispatch(ADD_USER, user);
+export const register = function({ dispatch, state }, username, password) {
+    return new Promise(function(resolve, reject) {
+        new Wilddog(`${DBUrl}user_list`).child(username).update({ username, password }, function(errMsg) {
+            if (errMsg) {
+                reject(errMsg);
+            } else {
+                resolve();
+                dispatch(REGISTER, { username, password });
+            }
+        });
+    });
+};
+export const findUser = function({ dispatch, state }, username) {
+    return new Promise(function(resolve, reject) {
+        new Wilddog(`${DBUrl}user_list`).on('value', (response) => {
+            let userMap = response.val() || {};
+
+            // TODO，用户名非法 userMap.hasOwnProperty(username)
+
+            if (userMap[username]) {
+                reject('ERROR_USERNAME');
+            } else {
+                resolve(null);
+            }
+        });
+    });
+};
+export const login = function({ dispatch, state }, username, password) {
+    return new Promise(function(resolve, reject) {
+        new Wilddog(`${DBUrl}user_list`).on('value', (response) => {
+            let userMap = response.val() || {};
+
+            if (!userMap.hasOwnProperty(username) || !userMap[username]) {
+                reject('ERROR_USERNAME');
+            } else if (userMap[username].password !== password) {
+                reject('ERROR_PASSWORD');
+            } else {
+                resolve();
+                dispatch(LOGIN, userMap[username]);
+            }
+        }, (errMsg) => {
+            console.error(errMsg);
+            reject(errMsg);
+        });
+    });
 };
 
 export const regetTodoList = function({ dispatch, state }) {
@@ -23,7 +66,7 @@ export const regetTodoList = function({ dispatch, state }) {
     const user = state.user;
 
     return new Promise(function(resolve, reject) {
-        new Wilddog(DBUrl).on('value', (response) => {
+        new Wilddog(`${DBUrl}todoList`).on('value', (response) => {
             let data = response.val() || {};
 
             let todoList = [];
@@ -50,7 +93,7 @@ export const updateTodoById = function({ dispatch, state }, todoInfo) {
     }
 
     return new Promise(function(resolve, reject) {
-        new Wilddog(DBUrl).child(todoInfo.id).update(todoInfo, function(errMsg) {
+        new Wilddog(`${DBUrl}todoList`).child(todoInfo.id).update(todoInfo, function(errMsg) {
             if (errMsg) {
                 reject(errMsg);
             } else {
@@ -63,14 +106,13 @@ export const updateTodoById = function({ dispatch, state }, todoInfo) {
 
 export const deleteTodoById = function({ dispatch, state }, todoInfo) {
     return new Promise(function(resolve, reject) {
-        new Wilddog(DBUrl).child(todoInfo.id).set(null, (errMsg) => {
+        new Wilddog(`${DBUrl}todoList`).child(todoInfo.id).set(null, (errMsg) => {
             if (errMsg) {
                 reject(errMsg);
-                return;
+            } else {
+                resolve();
+                dispatch(DELETE_TODO_BY_ID, todoInfo);
             }
-
-            resolve();
-            dispatch(DELETE_TODO_BY_ID, todoInfo);
         });
     });
 };

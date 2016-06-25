@@ -1,10 +1,10 @@
 <template>
     <div class="top-nav language">
         <div class="logo">
-            <a v-if="!hasUser" v-link="{ name: 'index' }">todos</a>
+            <a v-link="{ name: 'index' }">todos</a>
         </div>
         <div class="user-menu">
-            <a v-if="!hasUser" v-link="{ name: 'detail' }">My Account</a>
+            <a v-if="hasUser" v-link="{ name: 'detail' }">{{user.username}}</a>
             <a v-if="!hasUser" v-link="{ name: 'login' }">Login</a>
             <a v-if="!hasUser" v-link="{ name: 'register' }">Register</a>
             |
@@ -17,17 +17,22 @@
 </template>
 
 <script>
-import { getUser } from '../../vuex/getters.js';
+import {
+    getUser as user
+} from '../../vuex/getters.js';
 
 
 export default {
     name: 'TopNav',
     vuex: {
-        getters: { getUser }
+        getters: { user }
     },
     computed: {
         hasUser() {
-            return false;
+            const self = this;
+            const user = self.user;
+
+            return user && user.username && user.password;
         }
     }
 };

@@ -1,5 +1,5 @@
 import {
-    ADD_USER, LOGIN, UPDATE_TODO_LIST, UPDATE_TODO_BY_ID, DELETE_TODO_BY_ID, NEW_TOP_MSG
+    REGISTER, LOGIN, UPDATE_TODO_LIST, UPDATE_TODO_BY_ID, DELETE_TODO_BY_ID, NEW_TOP_MSG
 } from './types.js';
 import noticeJob from '../js/notice-job';
 
@@ -14,11 +14,13 @@ export const mutations = {
     [NEW_TOP_MSG](state, msg) {
         state.topMsg = msg;
     },
-    [ADD_USER](state, user) {
-        state.user = user;
+    [REGISTER](state, user) {
+        state.user = {
+            username: user.username
+        };
     },
     [LOGIN](state, user) {
-
+        state.user = user;
     },
     [UPDATE_TODO_LIST](state, todoList) {
         state.todoList = todoList;
@@ -26,7 +28,7 @@ export const mutations = {
         noticeJob(todoList);
     },
     [UPDATE_TODO_BY_ID](state, todoInfo, isNew) {
-        const todoList = state.todoList;
+        const todoList = state.todoList || [];
         const todoListLen = todoList.length;
         var i = -1;
 

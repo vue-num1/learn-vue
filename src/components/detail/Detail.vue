@@ -1,8 +1,5 @@
 <template>
     <div class-="detail">
-        <div id="toast-container" v-show="isShowTopMsg">
-            <div class="toast" >{{topMsg}}</div>
-        </div>
         <todo-list :list-data="todoList"></todo-list>
     </div>
 </template>
@@ -12,7 +9,7 @@ import {
     regetTodoList as regetTodoListAction
 } from '../../vuex/actions.js';
 import {
-    getTodoList as todoList, getTopMsg
+    getTodoList as todoList
 } from '../../vuex/getters.js';
 
 import TodoList from './TodoList.vue';
@@ -22,12 +19,7 @@ export default {
     name: 'Detail',
     vuex: {
         actions: { regetTodoListAction },
-        getters: { todoList, getTopMsg }
-    },
-    data() {
-        return {
-            isShowTopMsg: false
-        };
+        getters: { todoList }
     },
     created() {
         const self = this;
@@ -42,20 +34,6 @@ export default {
         }, function(errMsg) {
 
         });
-    },
-    computed: {
-        topMsg() {
-            const self = this;
-
-            setTimeout(function() {
-                self.isShowTopMsg = false;
-            }, 3000);
-
-            if (self.getTopMsg) {
-                self.isShowTopMsg = true;
-            }
-            return self.getTopMsg;
-        }
     },
     components: {
         TodoList

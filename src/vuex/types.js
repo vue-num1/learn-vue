@@ -1,5 +1,5 @@
 
-export const ADD_USER = 'ADD_USER';
+export const REGISTER = 'REGISTER';
 export const LOGIN = 'LOGIN';
 export const ADD_TODO = 'ADD_TODO';
 export const DELETE_TODO_BY_ID = 'DELETE_TODO_BY_ID';
