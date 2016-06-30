@@ -1,5 +1,5 @@
 import {
-    REGISTER, LOGIN, UPDATE_TODO_LIST, UPDATE_TODO_BY_ID, DELETE_TODO_BY_ID, NEW_TOP_MSG
+    REGISTER, LOGIN, UPDATE_TODO_LIST, UPDATE_TODO_BY_ID, DELETE_TODO_BY_ID, NEW_TOP_MSG,UPDATE_EDITMODE
 } from './types.js';
 import noticeJob from '../js/notice-job';
 
@@ -8,10 +8,14 @@ export const state = {
     user: null,
     todoList: null,
     topMsg: '',
-    onSetting:false
+    onSetting:false,
+    isEditMode:false
 };
 
 export const mutations = {
+    [UPDATE_EDITMODE](state) {
+        state.isEditMode = !state.isEditMode;
+    },
     [NEW_TOP_MSG](state, msg) {
         state.topMsg = msg;
     },

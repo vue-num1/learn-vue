@@ -45,6 +45,7 @@
     width: 2rem;
     border-radius: 100%;
     background-size: 80%;
+    margin-right: 30px;
 }
 .icon-time input {
     opacity: 0;
@@ -156,11 +157,43 @@ nav {
     opacity: 0;
 }
 .type-red {
-    border-left: 5px #ec407a solid;
+    border-left: 5px #F44336 solid;
 }
 .type-blue {
-    border-left: 5px #42a5f5 solid;
+    border-left: 5px #2196F3 solid;
 }
 .type-yellow {
-    border-left: 5px #cddc39 solid;
+    border-left: 5px #fdd835 solid;
+}
+.bounce-transition {
+    display: inline-block;
+    /* 否则 scale 动画不起作用 */
+}
+.bounce-enter {
+    animation: fadeInDown .5s;
+}
+.bounce-leave {
+    animation: fadeOutDown .5s;
+}
+@keyframes fadeInDown {
+    0% {
+        opacity: 0;
+        -webkit-transform: translate3d(0, -100%, 0);
+        transform: translate3d(0, -100%, 0)
+    }
+    100% {
+        opacity: 1;
+        -webkit-transform: none;
+        transform: none
+    }
+}
+@keyframes fadeOutDown {
+    0% {
+        opacity: 1
+    }
+    100% {
+        opacity: 0;
+        -webkit-transform: translate3d(0, 100%, 0);
+        transform: translate3d(0, 100%, 0)
+    }
 }

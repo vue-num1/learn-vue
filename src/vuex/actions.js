@@ -1,6 +1,6 @@
 const Wilddog = require('wilddog');
 import {
-    REGISTER, UPDATE_TODO_LIST, UPDATE_TODO_BY_ID, DELETE_TODO_BY_ID, NEW_TOP_MSG, LOGIN
+    REGISTER, UPDATE_TODO_LIST, UPDATE_TODO_BY_ID, DELETE_TODO_BY_ID, NEW_TOP_MSG, LOGIN,UPDATE_EDITMODE
 } from './types.js';
 // import router from '../index.js';
 import noticeJob from '../js/notice-job';
@@ -10,6 +10,9 @@ const DBUrl = 'https://todoyonghua110.wilddogio.com/';
 
 export const setTopMsg = function({ dispatch, state }, msg) {
     dispatch(NEW_TOP_MSG, msg);
+};
+export const updateEditmode = function({ dispatch, state }) {
+    dispatch(UPDATE_EDITMODE);
 };
 export const register = function({ dispatch, state }, username, password) {
     return new Promise(function(resolve, reject) {

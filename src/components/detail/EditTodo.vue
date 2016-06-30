@@ -1,171 +1,145 @@
 <template>
-    <section class="edit-todo">
-      <div class="row">
-  <form class="col s12">
-      <div class="types">
-        <div class="fixed-action-btn horizontal" style="position:absolute;bottom: 45px; right: 24px;">
-        <a class="btn-floating btn-large red">
-          <i class="large material-icons">mode_edit</i>
-        </a>
-        <ul>
-          <li><a class="btn-floating red"><i class="material-icons">insert_chart</i></a></li>
-          <li><a class="btn-floating yellow darken-1"><i class="material-icons">format_quote</i></a></li>
-          <li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>
-          <li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>
-        </ul>
-      </div>
-      </div>
-    <div class="row">
-      <div class="input-field col s12">
-        <input id="title" type="text" class="validate" placeholder="Title">
-      </div>
-    </div>
-    <div class="row">
-        <div class="input-field col s12">
-          <textarea id="textarea1" class="materialize-textarea" length="360"></textarea>
-          <label for="textarea1">Textarea</label>
-        </div>
-      </div>
-  </form>
-</div>
+    <div>
+        <div @click="updateEditmodeAction" v-show="getEditMode" class="black-bg"></div>
+        <div v-show="getEditMode">
+            <section class="edit-todo">
+                <div class="edit-title">EditTodo</div>
+                <div class="row">
+                    <form class="col s12">
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="title" type="text" class="validate" placeholder="Title">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <textarea id="textarea1" class="materialize-textarea" length="360"></textarea>
+                                <label for="textarea1">Textarea</label>
+                            </div>
+                        </div>
+                        <div class="types">
+                            <div class="fixed-action-btn horizontal select-type">
+                                <a class="btn-floating btn-large red">
+                                    <i class="large material-icons">mode_edit</i>
+                                </a>
+                                <ul>
+                                    <li><a class="btn-floating red"><i class="material-icons">perm_identity</i></a></li>
+                                    <li><a class="btn-floating yellow darken-1"><i class="material-icons">supervisor_account</i></a></li>
+                                    <li><a class="btn-floating green"><i class="material-icons">turned_in</i></a></li>
+                                    <li><a class="btn-floating blue"><i class="material-icons">loyalty</i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="center-align">
+                            <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+                                <i class="material-icons right">send</i>
+                            </button>
+                        </div>
 
-    </section>
+                    </form>
+                </div>
+
+            </section>
+        </div>
+    </div>
 </template>
-<style media="screen">
-  .edit-todo{
-    background-color: #fff;
-  }
-  .types{
-    position: relative;
-  }
-</style>
+
 
 <script>
-import _ from 'lodash';
-import performance from '../../js/performance_mixin';
-import moment from 'moment';
-import datePicker from 'vue-datepicker';
-import {
-    updateTodoById as updateTodoByIdAction,
-    setTopMsg as setTopMsgAction
-} from '../../vuex/actions.js';
-
-
-const initTodo = {
-    id: null,
-    text: '',
-    content:'',
-    done: false,
-    time: ''
-};
-
-export default {
-    name: 'EditTodo',
-    mixins: [performance],
-    vuex: {
-        actions: { updateTodoByIdAction, setTopMsgAction }
-    },
-    props: {
-        todoId: {
-            type: String,
-            default() {
-                return _.cloneDeep(initTodo).id;
-            }
-        },
-        todoItem: {
-            default() {
-                return _.cloneDeep(initTodo);
-            }
-        }
-    },
-    data(){
-        return {
-            isAdding: false,
-            startTime: '',
-            timeoption: {
-                type: 'min',
-                week: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
-                month: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-                format: 'YYYY-MM-DD HH:mm'
+    import _ from 'lodash';
+    import {
+        updateEditmode as updateEditmodeAction
+    } from '../../vuex/actions.js';
+    import {
+        getEditMode,
+    } from '../../vuex/getters.js';
+    export default {
+        name: 'EditTodo',
+        vuex: {
+            actions: {
+                updateEditmodeAction
             },
-            isEditMode: false
-        };
-    },
-    // watch:{
-    //     'todoItem.done':function (){
-    //         this.saveTodo();
-    //     },
-    //     'todoItem.time':function (){
-    //         this.noticed = false;
-    //         this.saveTodo();
-    //     }
-    // },
-    methods:{
-        saveTodo(){
-            const self = this;
-
-            if (_.isEmpty(self.todoItem.text)) {
-                self.$els.editinput.focus();
-                return;
+            getters: {
+                getEditMode
             }
-            if (self.isAdding) {
-                return;
-            }
-
-            self.isAdding = true;
-            self.updateTodoByIdAction(self.todoItem).then(function(isNew) {
-                self.disableEdit();
-                self.isAdding = false;
-
-                self.setTopMsgAction(isNew ? '新增成功' : '更新成功');
-            }, function(errMsg) {
-                self.isAdding = false;
-
-                self.setTopMsgAction(errMsg);
-            });
         },
-        enableEdit() {
-            if (this.todoItem.done) {
-                return;
-            }
-            this.isEditMode = true;
-            this.$nextTick(() => {
-                this.$els.editinput.focus();
-            });
+        data() {
+            return {
+
+            };
         },
-        disableEdit() {
-            this.isEditMode = false;
-        }
-    },
-    created(){
-        window.addEventListener('click', () => {
-            this.disableEdit();
-        });
-    },
-    beforeDestroy() {
-        window.removeEventListener('click', () => {
-            this.disableEdit();
-        });
-    },
-    components: {
-        datePicker
-    },
-    filters:{
-        formatDate(val, format){
-            let mt = moment(val);
-            return  mt.isValid() ? mt.format(format||'YYYY-MM-DD HH:mm') : ''
-        }
+        methods: {
+            saveTodo() {
+                const self = this;
 
-    },
-    directives: {
-        placeholder(placeString) {
-            let vm = this.vm;
-            if (_.isEmpty(vm.todoItem.text)) {
-                vm.todoItem.text = placeString;
+                if (_.isEmpty(self.todoItem.text)) {
+                    self.$els.editinput.focus();
+                    return;
+                }
+                if (self.isAdding) {
+                    return;
+                }
+
+                self.isAdding = true;
+                self.updateTodoByIdAction(self.todoItem).then(function(isNew) {
+                    self.disableEdit();
+                    self.isAdding = false;
+
+                    self.setTopMsgAction(isNew ? '新增成功' : '更新成功');
+                }, function(errMsg) {
+                    self.isAdding = false;
+
+                    self.setTopMsgAction(errMsg);
+                });
             }
-            // console.log(placeString);
         }
-    }
-};
-
+    };
 </script>
+<style>
+    .select-type {
+        position: absolute;
+        right: 20px;
+        top: -20px;
+        /*transform: translate3d(-50%,0,0);*/
+    }
+
+    .edit-title {
+        text-align: center;
+        background: #f44336;
+        line-height: 3;
+        color: #fff;
+        font-size: 24px;
+    }
+
+    .black-bg {
+        background-color: rgba(0, 0, 0, 0.6);
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+    }
+
+    .edit-todo {
+        background-color: #fff;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate3d(-50%, -50%, 0);
+        min-height: 500px;
+        width: 540px;
+        max-height: 600px;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+
+    .input-field {
+        max-height: 300px;
+        overflow-y: scroll;
+    }
+
+    .types {
+        position: relative;
+        height: 50px;
+    }
+</style>

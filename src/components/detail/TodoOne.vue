@@ -17,7 +17,7 @@
                  </div>
             </div>
             <div class="media-right media-middle">
-                <span @click="" class="icon-more ">
+                <span @click="updateEditmodeAction" class="icon-more ">
             </div>
         </div>
 
@@ -31,7 +31,8 @@ import moment from 'moment';
 import datePicker from 'vue-datepicker';
 import {
     updateTodoById as updateTodoByIdAction,
-    setTopMsg as setTopMsgAction
+    setTopMsg as setTopMsgAction,
+    updateEditmode as updateEditmodeAction
 } from '../../vuex/actions.js';
 
 
@@ -47,7 +48,7 @@ export default {
     name: 'TodoOne',
     mixins: [performance],
     vuex: {
-        actions: { updateTodoByIdAction, setTopMsgAction }
+        actions: { updateTodoByIdAction, setTopMsgAction ,updateEditmodeAction}
     },
     props: {
         todoId: {

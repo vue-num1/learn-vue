@@ -6,3 +6,4 @@ export const DELETE_TODO_BY_ID = 'DELETE_TODO_BY_ID';
 export const UPDATE_TODO_BY_ID = 'UPDATE_TODO_BY_ID';
 export const UPDATE_TODO_LIST = 'UPDATE_TODO_LIST';
 export const NEW_TOP_MSG = 'NEW_TOP_MSG';
+export const UPDATE_EDITMODE = 'UPDATE_EDITMODE';

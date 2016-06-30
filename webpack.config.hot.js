@@ -16,6 +16,7 @@ module.exports = {
     resolve:{
 
     },
+    devtool:"source-map",
     plugins: [
         new webpack.HotModuleReplacementPlugin()
     ],

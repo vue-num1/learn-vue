@@ -10,3 +10,7 @@ export const getTodoList = function(state) {
 export const getTopMsg = function(state) {
     return state.topMsg;
 };
+
+export const getEditMode = function(state) {
+    return state.isEditMode;
+};
