@@ -4,14 +4,15 @@
             <a v-link="{ name: 'index' }">todos</a>
         </div>
         <div class="user-menu">
-            <a v-if="hasUser" v-link="{ name: 'detail' }">{{user.username}}</a>
-            <a v-if="!hasUser" v-link="{ name: 'login' }">Login</a>
-            <a v-if="!hasUser" v-link="{ name: 'register' }">Register</a>
-            |
-            <input id="lang-cn" v-model="language_" type="radio" v-bind:value="'CN'">
-            <label for="lang-cn">CN</label>
-            <input id="lang-en" v-model="language_" type="radio" v-bind:value="'EN'">
-            <label for="lang-en" >EN</label>
+          <span v-if="hasUser">
+            <a v-link="{ name: 'detail' }">{{user.username}}</a>
+          </span>
+          <span v-else>
+            <a v-link="{ name: 'login' }">Login</a>&nbsp;/&nbsp;
+            <a v-link="{ name: 'register' }">Register</a>
+          </span>
+
+
         </div>
     </div>
 </template>

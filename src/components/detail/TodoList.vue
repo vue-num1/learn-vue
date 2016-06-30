@@ -15,7 +15,7 @@
         </ul>
         <div class="lighten-3 tips-info">
             <p v-translate="'editway'"></p>
-            <!-- <p v-translate="'author'"></p> -->
+            <p v-translate="'author'"></p>
         </div>
     </section>
 </template>

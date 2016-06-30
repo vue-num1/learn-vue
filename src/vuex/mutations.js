@@ -7,7 +7,8 @@ import noticeJob from '../js/notice-job';
 export const state = {
     user: null,
     todoList: null,
-    topMsg: ''
+    topMsg: '',
+    onSetting:false
 };
 
 export const mutations = {

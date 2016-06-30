@@ -1,28 +1,44 @@
 <template>
-    <section  style="-webkit-user-select: none;padding: 10px 20px;" class="type type-red">
-        <div class="m-media">
-            <div class="media-left media-middle">
-                <input type="checkbox" id="chk_{{todoId}}" class="filled-in" v-model="todoItem.done" />
-                <label style="margin-top:10px " for="chk_{{todoId}}"></label>
-            </div>
-            <div class="media-body" @dblclick.stop="enableEdit">
-                <div v-show="isEditMode || !todoId" >
-                    <input
-                        placeholder="todo content"
-                        v-el:editinput :autofocus="!todoId" type="text" @keyup.enter="saveTodo" v-model="todoItem.text" lazy />
-                </div>
-                <div :class="{'done-todo':todoItem.done}" v-else >
-                    <div class="todoItem-title">{{todoItem.text}}</div>
-                    <div class="todoItem-time">{{todoItem.time||new Date() | formatDate 'YYYY年MM月DD日 HH:mm'}}</div>
-                 </div>
-            </div>
-            <div class="media-right media-middle">
-                <span @click="" class="icon-more ">
-            </div>
+    <section class="edit-todo">
+      <div class="row">
+  <form class="col s12">
+      <div class="types">
+        <div class="fixed-action-btn horizontal" style="position:absolute;bottom: 45px; right: 24px;">
+        <a class="btn-floating btn-large red">
+          <i class="large material-icons">mode_edit</i>
+        </a>
+        <ul>
+          <li><a class="btn-floating red"><i class="material-icons">insert_chart</i></a></li>
+          <li><a class="btn-floating yellow darken-1"><i class="material-icons">format_quote</i></a></li>
+          <li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>
+          <li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>
+        </ul>
+      </div>
+      </div>
+    <div class="row">
+      <div class="input-field col s12">
+        <input id="title" type="text" class="validate" placeholder="Title">
+      </div>
+    </div>
+    <div class="row">
+        <div class="input-field col s12">
+          <textarea id="textarea1" class="materialize-textarea" length="360"></textarea>
+          <label for="textarea1">Textarea</label>
         </div>
+      </div>
+  </form>
+</div>
 
     </section>
 </template>
+<style media="screen">
+  .edit-todo{
+    background-color: #fff;
+  }
+  .types{
+    position: relative;
+  }
+</style>
 
 <script>
 import _ from 'lodash';
@@ -44,7 +60,7 @@ const initTodo = {
 };
 
 export default {
-    name: 'TodoOne',
+    name: 'EditTodo',
     mixins: [performance],
     vuex: {
         actions: { updateTodoByIdAction, setTopMsgAction }

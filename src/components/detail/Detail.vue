@@ -1,6 +1,7 @@
 <template>
     <div class-="detail">
         <todo-list :list-data="todoList"></todo-list>
+        <edit-todo :list-data="todoList"></edit-todo>
     </div>
 </template>
 
@@ -13,6 +14,7 @@ import {
 } from '../../vuex/getters.js';
 
 import TodoList from './TodoList.vue';
+import EditTodo from './EditTodo.vue';
 
 
 export default {
@@ -36,7 +38,7 @@ export default {
         });
     },
     components: {
-        TodoList
+        TodoList,EditTodo
     }
 };
 </script>
