@@ -156,6 +156,21 @@ nav {
     transform: translatey(-50px);
     opacity: 0;
 }
+.bg-red {
+    background-color: #F44336
+}
+.border-red {
+    border-left: 20px #F44336 solid;
+}
+.bg-blue {
+    background-color: #2196F3
+}
+.bg-yellow {
+    background-color: #fdd835
+}
+.bg-green {
+    background-color: #4CAF50
+}
 .type-red {
     border-left: 5px #F44336 solid;
 }
@@ -164,6 +179,9 @@ nav {
 }
 .type-yellow {
     border-left: 5px #fdd835 solid;
+}
+.type-green {
+    border-left: 5px #4CAF50 solid;
 }
 .bounce-transition {
     display: inline-block;

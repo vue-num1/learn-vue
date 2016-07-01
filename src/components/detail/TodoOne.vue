@@ -1,5 +1,5 @@
 <template>
-    <section  style="-webkit-user-select: none;padding: 10px 20px;" class="type type-red">
+    <section  style="-webkit-user-select: none;padding: 10px 20px;" class="type type-{{todoItem.color}}">
         <div class="m-media">
             <div class="media-left media-middle">
                 <input type="checkbox" id="chk_{{todoId}}" class="filled-in" v-model="todoItem.done" />
@@ -17,7 +17,7 @@
                  </div>
             </div>
             <div class="media-right media-middle">
-                <span @click="updateEditmodeAction" class="icon-more ">
+                <span @click="editTodo" class="icon-more ">
             </div>
         </div>
 
@@ -41,7 +41,8 @@ const initTodo = {
     text: '',
     content:'',
     done: false,
-    time: ''
+    time: '',
+    color:'red'
 };
 
 export default {
@@ -120,6 +121,9 @@ export default {
         },
         disableEdit() {
             this.isEditMode = false;
+        },
+        editTodo: function () {
+            this.$dispatch('editTodo',this.todoItem )
         }
     },
     created(){

@@ -1,37 +1,37 @@
 <template>
     <div>
-        <div @click="updateEditmodeAction" v-show="getEditMode" class="black-bg"></div>
-        <div v-show="getEditMode">
+        <div @click="closeEdit" class="black-bg"></div>
+        <div>
             <section class="edit-todo">
-                <div class="edit-title">EditTodo</div>
+                <div class="edit-title bg-{{listData.color}}">Edittodo</div>
+                <div class="types">
+                    <div class="fixed-action-btn horizontal select-type">
+                        <a class="btn-floating btn-large  bg-{{listData.color}}">
+                            <i class="large material-icons">mode_edit</i>
+                        </a>
+                        <ul>
+                            <li @click=changeColor("red")><a class="btn-floating red"><i class="material-icons"></i></a></li>
+                            <li @click=changeColor("yellow")><a class="btn-floating yellow darken-1"><i class="material-icons"></i></a></li>
+                            <li @click=changeColor("green")><a class="btn-floating green"><i class="material-icons"></i></a></li>
+                            <li @click=changeColor("blue")><a class="btn-floating blue"><i class="material-icons"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
                 <div class="row">
                     <form class="col s12">
                         <div class="row">
                             <div class="input-field col s12">
-                                <input id="title" type="text" class="validate" placeholder="Title">
+                                <input v-model="listData.text" lazy @keyup.enter="saveTodo" type="text" class="validate" placeholder="Title">
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-field col s12">
-                                <textarea id="textarea1" class="materialize-textarea" length="360"></textarea>
-                                <label for="textarea1">Textarea</label>
+                                <textarea v-model="listData.content" class="materialize-textarea" length="360" placeholder="content"></textarea>
                             </div>
                         </div>
-                        <div class="types">
-                            <div class="fixed-action-btn horizontal select-type">
-                                <a class="btn-floating btn-large red">
-                                    <i class="large material-icons">mode_edit</i>
-                                </a>
-                                <ul>
-                                    <li><a class="btn-floating red"><i class="material-icons">perm_identity</i></a></li>
-                                    <li><a class="btn-floating yellow darken-1"><i class="material-icons">supervisor_account</i></a></li>
-                                    <li><a class="btn-floating green"><i class="material-icons">turned_in</i></a></li>
-                                    <li><a class="btn-floating blue"><i class="material-icons">loyalty</i></a></li>
-                                </ul>
-                            </div>
-                        </div>
+
                         <div class="center-align">
-                            <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+                            <button class="btn waves-effect waves-light bg-{{listData.color}}" type="submit" name="action" @click="saveAndClose">Submit
                                 <i class="material-icons right">send</i>
                             </button>
                         </div>
@@ -48,49 +48,63 @@
 <script>
     import _ from 'lodash';
     import {
+        updateTodoById as updateTodoByIdAction,
+        setTopMsg as setTopMsgAction,
         updateEditmode as updateEditmodeAction
     } from '../../vuex/actions.js';
     import {
         getEditMode,
     } from '../../vuex/getters.js';
+
+    const initTodo = {
+        id: null,
+        text: '',
+        content:'',
+        done: false,
+        time: '',
+        color:'red'
+    };
     export default {
         name: 'EditTodo',
         vuex: {
-            actions: {
-                updateEditmodeAction
-            },
-            getters: {
-                getEditMode
-            }
+            actions: { updateTodoByIdAction, setTopMsgAction ,updateEditmodeAction}
+        },
+        props:{
+          listData: {
+              type: Object,
+              default() {
+                  return _.cloneDeep(initTodo).id;
+              }
+          },
         },
         data() {
             return {
-
+                color:'red'
             };
         },
         methods: {
-            saveTodo() {
+            closeEdit(){
+              this.$dispatch('closeEdit')
+            },
+            saveTodo(){
                 const self = this;
-
-                if (_.isEmpty(self.todoItem.text)) {
+                if (_.isEmpty(self.listData.text)) {
                     self.$els.editinput.focus();
                     return;
                 }
-                if (self.isAdding) {
-                    return;
-                }
-
-                self.isAdding = true;
-                self.updateTodoByIdAction(self.todoItem).then(function(isNew) {
-                    self.disableEdit();
-                    self.isAdding = false;
-
+                self.updateTodoByIdAction(self.listData).then(function(isNew) {
                     self.setTopMsgAction(isNew ? '新增成功' : '更新成功');
                 }, function(errMsg) {
-                    self.isAdding = false;
-
                     self.setTopMsgAction(errMsg);
                 });
+            },
+            saveAndClose(){
+              this.saveTodo();
+              this.closeEdit();
+            },
+            changeColor(color){
+              this.listData.color=color;
+              this.saveTodo();
             }
         }
     };
@@ -99,16 +113,27 @@
     .select-type {
         position: absolute;
         right: 20px;
-        top: -20px;
+        top: -25px;
         /*transform: translate3d(-50%,0,0);*/
     }
+    .fixed-action-btn.horizontal ul li {
+    display: inline-block;
+    margin: 8px 10px 0 0;
+}
+
+.btn-floating{
+  box-shadow: none;
+}
+.btn-floating:hover{
+  box-shadow: none;
+}
 
     .edit-title {
         text-align: center;
-        background: #f44336;
         line-height: 3;
         color: #fff;
         font-size: 24px;
+        transition: .5s;
     }
 
     .black-bg {
