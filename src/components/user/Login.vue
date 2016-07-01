@@ -1,22 +1,23 @@
 <template>
     <div class="login">
-        <h5 class="center-align">Login</h5>
+        <h5 class="center-align">{{$t('common.login')}}</h5>
       <div class="row">
       <form class="col s12">
         <div class="row">
           <div class="input-field col s12">
             <input id="email" type="text" class="validate" v-model="username">
-            <label for="email">Email</label>
+            <label for="email">{{$t('common.username')}}</label>
           </div>
           <div class="input-field col s12">
             <input id="password" type="password" class="validate" v-model="password">
-            <label for="password">Password</label>
+            <label for="password">{{$t('common.password')}}</label>
           </div>
           <div class="s12">
             <div class="right-align">
               <button class="btn waves-effect waves-light" type="submit" name="action"
                 @click="toLogin"
-                :disabled="!isOkBtn">Submit</button>
+                :class="{'btn-loading': isLogining}"
+                :disabled="!isOkBtn || isLogining">{{$t('common.submit')}}</button>
             </div>
           </div>
         </div>
@@ -26,28 +27,48 @@
 </template>
 
 <script>
+import {t as formatMessage} from 'vue';
+import _ from 'lodash';
+
 import {
     login as loginAction,
     setTopMsg as setTopMsgAction
 } from '../../vuex/actions.js';
 import {
-    getUser as getUserAction
-} from '../../vuex/actions.js';
+    getUser as user
+} from '../../vuex/getters.js';
+import { checkUsername, checkPassword } from '../../utils/validator.js';
 
 
 export default {
     name: 'Login',
     vuex: {
-        actions: { getUserAction, loginAction, setTopMsgAction }
+        actions: { loginAction, setTopMsgAction },
+        getters: { user }
     },
     data() {
-        const user = this.getUserAction;
+        const self = this;
+        const user = self.user;
+
+        if (user.isLogin) {
+            self.$router.go({ name: 'detail' });
+        }
+
         return {
             username: user.username || 'admin',
             usernameMsg: '',
-            password: 'admin',
-            passwordMsg: ''
+            password: user.password || 'admin',
+            passwordMsg: '',
+            isLogining: false
         };
+    },
+    created() {
+        const self = this;
+        const user = self.user;
+
+        if (user.isLogin) {
+            self.$router.go({ name: 'detail' });
+        }
     },
     computed: {
         isOkBtn() {
@@ -56,22 +77,22 @@ export default {
             let { usernameMsg, passwordMsg } = self;
 
             let isOk = true;
+            const usernameResult = checkUsername(username);
+            const passwordResult = checkUsername(password);
 
-            if (!username) {
-                isOk = false;
-                usernameMsg = 'need username';
+            if (usernameResult.isOk) {
+                self.usernameMsg = '';
             } else {
-                usernameMsg = '';
+                isOk = false;
+                self.usernameMsg = formatMessage(`errorCode['${usernameResult.errorCode}']`);
             }
-            self.usernameMsg = usernameMsg;
 
-            if (!password) {
-                isOk = false;
-                passwordMsg = 'need password';
+            if (passwordResult.isOk) {
+                self.passwordMsg = '';
             } else {
-                passwordMsg = '';
+                isOk = false;
+                self.passwordMsg = formatMessage(`errorCode['${passwordResult.errorCode}']`);
             }
-            self.passwordMsg = passwordMsg;
 
             return isOk;
         }
@@ -80,28 +101,33 @@ export default {
         toLogin() {
             const self = this;
             const {
+                isOkBtn,
+                isLogining,
                 username, password,
                 usernameMsg, passwordMsg
             } = self;
 
-            if (!self.isOkBtn) {
-                self.setTopMsgAction(usernameMsg || passwordMsg);
+            if (!isOkBtn) { return; }
+
+            if (isLogining) {
+                self.setTopMsgAction(formatMessage(`infoTips['${'PLEASE WAIT...'}']`));
                 return;
             }
 
+            self.isLogining = true;
             self.loginAction(username, password).then(function() {
-                self.setTopMsgAction('登陆成功');
+                self.isLogining = false;
+
+                self.setTopMsgAction(formatMessage(`infoTips['${'LOGIN SUCCESS'}']`));
                 self.$router.go({ name: 'detail' });
             }, function(errMsg) {
-                switch (errMsg) {
-                    case 'ERROR_USERNAME':
-                        self.setTopMsgAction('无此用户名');
-                        break;
-                    case 'ERROR_PASSWORD':
-                        self.setTopMsgAction('密码不匹配');
-                        break;
-                    default:
-                        self.setTopMsgAction(errMsg);
+                self.isLogining = false;
+
+                const errorCode = _.get(errMsg, 'errorCode');
+                if (errorCode) {
+                    self.setTopMsgAction(formatMessage(`errorCode['${errorCode}']`));
+                } else {
+                    self.setTopMsgAction(errMsg);
                 }
             });
         }

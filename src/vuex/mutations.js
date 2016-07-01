@@ -1,13 +1,33 @@
+import _ from 'lodash';
+
 import {
-    REGISTER, LOGIN, UPDATE_TODO_LIST, UPDATE_TODO_BY_ID, DELETE_TODO_BY_ID, NEW_TOP_MSG,UPDATE_EDITMODE
+    REGISTER, LOGIN, UPDATE_TODO_LIST, UPDATE_TODO_BY_ID, DELETE_TODO_BY_ID, NEW_TOP_MSG,UPDATE_EDITMODE, LOGOUT
 } from './types.js';
 import noticeJob from '../js/notice-job';
+import { getCookieByName } from '../utils/other.js';
 
-
+const username = getCookieByName('todos_username');
 export const state = {
-    user: null,
+    /**
+     * 数据结构标准：
+     * {
+     * 		username,
+     * 		password,
+     * 		isLogin        // 是否真实的登陆了，该标志用来在 false 的情况下，系统自动取 cookie 来后台模拟登陆,
+     * 		isTryToLogin   // 是否正在登陆。。。
+     * }
+     * @type {[Object]}
+     */
+    user: username ? { username, isLogin: false } : null,
     todoList: null,
-    topMsg: '',
+    /**
+     * 提示信息缓存，存储量超过 100 时，会自动清除最早的：
+     * [
+     * 		'msg1', 'msg2'
+     * ]
+     * @type {Array}
+     */
+    topMsg: [],
     onSetting:false,
     isEditMode:false
 };
@@ -17,15 +37,23 @@ export const mutations = {
         state.isEditMode = !state.isEditMode;
     },
     [NEW_TOP_MSG](state, msg) {
-        state.topMsg = msg;
+        let topMsg = state.topMsg;
+        if (topMsg.length >= 100) {
+            topMsg = topMsg.slice(0, 99);
+        }
+        state.topMsg = topMsg.concat(msg);
     },
     [REGISTER](state, user) {
         state.user = {
-            username: user.username
+            username: user.username,
+            isLogin: false
         };
     },
     [LOGIN](state, user) {
-        state.user = user;
+        state.user = _.merge({ isLogin: true }, user);
+    },
+    [LOGOUT](state) {
+        state.user = {};
     },
     [UPDATE_TODO_LIST](state, todoList) {
         state.todoList = todoList;

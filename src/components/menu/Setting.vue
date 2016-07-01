@@ -8,9 +8,11 @@
                     <span class="card-title">Setting</span>
                     <ul class="setting-item">
                         <li>
-                            <span>语言</span>
+                            <span>{{$t('settings.language')}}</span>
                             <div class="right">
-                                <span class="teal-text text-lighten-1">中文</span>&nbsp;/&nbsp;<span>English</span>
+                                <span class="teal-text text-lighten-1" @click="onLanguage('zh-CN')">中文</span>
+                                &nbsp;/&nbsp;
+                                <span @click="onLanguage('en-US')">English</span>
                             </div>
                         </li>
                         <li>
@@ -35,6 +37,8 @@
 </template>
 
 <script>
+    import { setCookie, getCookieByName } from '../../utils/other.js';
+
     export default {
         name: 'Setting',
         data: () => {
@@ -46,7 +50,14 @@
             switch () {
                 this.isedit = !this.isedit
             },
+            onLanguage(lang) {
+                const oldLang = getCookieByName('todos_lang');
 
+                if (oldLang === lang) { return; }
+
+                setCookie('todos_lang', lang);
+                location.reload();
+            }
         }
     };
 </script>

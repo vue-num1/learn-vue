@@ -1,26 +1,27 @@
 <template>
     <div class="register">
-    <h5 class="center-align">Register</h5>
+    <h5 class="center-align">{{$t('common.register')}}</h5>
     <div class="row">
     <form class="col s12">
       <div class="row">
         <div class="input-field col s12">
           <input id="email" type="text" class="validate" v-model="username">
-          <label for="email">Email</label>
+          <label for="email">{{$t('common.username')}}</label>
         </div>
         <div class="input-field col s12">
           <input id="password" type="password" class="validate" v-model="password">
-          <label for="password">Password</label>
+          <label for="password">{{$t('common.password')}}</label>
         </div>
         <div class="input-field col s12">
           <input id="repeatPassword" type="password" class="validate" v-model="repeatPassword">
-          <label for="repeatPassword">RepeatPassword</label>
+          <label for="repeatPassword">{{$t('common.repassword')}}</label>
         </div>
         <div class="s12">
           <div class="right-align">
             <button class="btn waves-effect waves-light" type="submit" name="action"
                 @click="toRegister"
-                :disabled="!isOkBtn">Submit</button>
+                :class="{'btn-loading': isAdding}"
+                :disabled="!isOkBtn || isAdding">{{$t('common.submit')}}</button>
           </div>
         </div>
       </div>
@@ -30,11 +31,14 @@
 </template>
 
 <script>
+import {t as formatMessage} from 'vue';
+
 import {
     findUser as findUserAction,
     register as registerAction,
     setTopMsg as setTopMsgAction
 } from '../../vuex/actions.js';
+import { checkUsername, checkPassword } from '../../utils/validator.js';
 
 
 export default {
@@ -57,33 +61,31 @@ export default {
         isOkBtn() {
             const self = this;
             const { username, password, repeatPassword } = self;
-            let { usernameMsg, passwordMsg, repeatPasswordMsg } = self;
 
             let isOk = true;
+            const usernameResult = checkUsername(username);
+            const passwordResult = checkUsername(password);
 
-            if (!username) {
-                isOk = false;
-                usernameMsg = '用户名无效';
+            if (usernameResult.isOk) {
+                self.usernameMsg = '';
             } else {
-                usernameMsg = '';
+                isOk = false;
+                self.usernameMsg = formatMessage(`errorCode['${usernameResult.errorCode}']`);
             }
-            self.usernameMsg = usernameMsg;
 
-            if (!password) {
-                isOk = false;
-                passwordMsg = '密码无效';
+            if (passwordResult.isOk) {
+                self.passwordMsg = '';
             } else {
-                passwordMsg = '';
+                isOk = false;
+                self.passwordMsg = formatMessage(`errorCode['${passwordResult.errorCode}']`);
             }
-            self.passwordMsg = passwordMsg;
 
-            if (!repeatPassword || password !== repeatPassword) {
-                isOk = false;
-                repeatPasswordMsg = '两次密码不匹配';
+            if (repeatPassword === password) {
+                self.repeatPasswordMsg = '';
             } else {
-                repeatPasswordMsg = '';
+                isOk = false;
+                self.repeatPasswordMsg = formatMessage(`errorMsg['${'PASSWORD NOT SAME'}']`);
             }
-            self.repeatPasswordMsg = repeatPasswordMsg;
 
             return isOk;
         }
@@ -92,35 +94,37 @@ export default {
         toRegister() {
             const self = this;
             const {
+                isOkBtn,
+                isAdding,
                 username, password, repeatPassword,
                 usernameMsg, passwordMsg, repeatPasswordMsg
             } = self;
 
-            if (!self.isOkBtn) {
-                self.setTopMsgAction(usernameMsg || passwordMsg || repeatPasswordMsg);
-                return;
-            }
-            if (self.isAdding) {
-                self.setTopMsgAction('正在注册。。。');
+            if (!isOkBtn) { return; }
+
+            if (isAdding) {
+                self.setTopMsgAction(formatMessage(`infoTips['${'PLEASE WAIT...'}']`));
                 return;
             }
 
             self.isAdding = true;
-            self.findUserAction(username).then(function() {
-                self.registerAction(username, password).then(function() {
-                    self.setTopMsgAction('注册成功');
-                    self.$router.go({ name: 'login' });
-                }, function(errMsg) {
-                    // TODO
-                });
-            }, function(errMsg) {
-                switch (errMsg) {
-                    case 'ERROR_USERNAME':
-                        self.setTopMsgAction('用户名重复');
-                        break;
-                    default:
-                        self.setTopMsgAction(errMsg);
+            self.findUserAction(username).then(function(user) {
+                self.isAdding = false;
+
+                if (user) {
+                    self.setTopMsgAction(formatMessage(`errorCode['${'SAME USERNAME'}']`));
+                } else {
+                    self.registerAction(username, password).then(function() {
+                        self.setTopMsgAction(formatMessage(`infoTips['${'REGISTER SUCCESS'}']`));
+                        self.$router.go({ name: 'login' });
+                    }, function(errMsg) {
+                        // TODO
+                    });
                 }
+            }, function(errMsg) {
+                self.isAdding = false;
+
+                self.setTopMsgAction(errMsg);
             });
         }
     }

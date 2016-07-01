@@ -21,8 +21,8 @@
         </div>
         <edit-todo :list-data="thisItemData" v-if="thisItemData"></todo-list>
         <div class="lighten-3 tips-info">
-            <p v-translate="'editway'"></p>
-            <p v-translate="'author'"></p>
+            <p>{{$t('editway')}}</p>
+            <p>{{$t('author')}}</p>
         </div>
     </section>
 </template>

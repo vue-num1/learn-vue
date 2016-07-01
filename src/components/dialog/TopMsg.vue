@@ -26,16 +26,20 @@ export default {
     computed: {
         topMsg() {
             const self = this;
+            const messages = self.getTopMsg;
+
+            if (!messages || messages.length === 0) {
+                self.isShowTopMsg = false;
+                return '';
+            }
 
             setTimeout(function() {
                 self.isShowTopMsg = false;
             }, 2000);
 
-            if (self.getTopMsg) {
-                self.isShowTopMsg = true;
-            }
+            self.isShowTopMsg = true;
 
-            return self.getTopMsg;
+            return messages[messages.length - 1];
         }
     }
 };

@@ -1,9 +1,12 @@
+import _ from 'lodash';
+
 const Wilddog = require('wilddog');
 import {
-    REGISTER, UPDATE_TODO_LIST, UPDATE_TODO_BY_ID, DELETE_TODO_BY_ID, NEW_TOP_MSG, LOGIN,UPDATE_EDITMODE
+    REGISTER, UPDATE_TODO_LIST, UPDATE_TODO_BY_ID, DELETE_TODO_BY_ID, NEW_TOP_MSG, LOGIN,UPDATE_EDITMODE, LOGOUT
 } from './types.js';
 // import router from '../index.js';
 import noticeJob from '../js/notice-job';
+import { setCookie, getCookieByName } from '../utils/other.js';
 
 
 const DBUrl = 'https://todoyonghua110.wilddogio.com/';
@@ -33,26 +36,34 @@ export const findUser = function({ dispatch, state }, username) {
 
             // TODO，用户名非法 userMap.hasOwnProperty(username)
 
-            if (userMap[username]) {
-                reject('ERROR_USERNAME');
-            } else {
-                resolve(null);
-            }
+            // if (userMap[username]) {
+            //     reject('ERROR_USERNAME');
+            // } else {
+            //     resolve(null);
+            // }
+            resolve(userMap[username]);
         });
     });
 };
+
 export const login = function({ dispatch, state }, username, password) {
+    
+    dispatch(LOGIN, { isTryToLogin: true, isLogin: false });
+
     return new Promise(function(resolve, reject) {
         new Wilddog(`${DBUrl}user_list`).on('value', (response) => {
             let userMap = response.val() || {};
 
             if (!userMap.hasOwnProperty(username) || !userMap[username]) {
-                reject('ERROR_USERNAME');
+                reject({ errorCode: 'USERNAME NOT EXIST' });
             } else if (userMap[username].password !== password) {
-                reject('ERROR_PASSWORD');
+                reject({ errorCode: 'PASSWORD NOT MATCH' });
             } else {
+                setCookie('todos_username', username);
+                setCookie('todos_password', password);
+
                 resolve();
-                dispatch(LOGIN, userMap[username]);
+                dispatch(LOGIN, _.merge({ isTryToLogin: false }, userMap[username]));
             }
         }, (errMsg) => {
             console.error(errMsg);
@@ -61,12 +72,18 @@ export const login = function({ dispatch, state }, username, password) {
     });
 };
 
+export const logout = function({ dispatch, state }) {
+    setCookie('todos_username', '');
+    setCookie('todos_password', '');
+
+    dispatch(LOGOUT);
+    dispatch(UPDATE_TODO_LIST, []);
+};
+
 export const regetTodoList = function({ dispatch, state }) {
     // if (!state.user) {
     //     router.go({ name: 'login' });
     // }
-
-    const user = state.user;
 
     return new Promise(function(resolve, reject) {
         new Wilddog(`${DBUrl}todoList`).on('value', (response) => {

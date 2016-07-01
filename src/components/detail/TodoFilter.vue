@@ -4,7 +4,7 @@
             <div class="nav-wrapper">
               <ul id="nav-mobile" class="right">
                   <template v-for="st in status">
-                         <li :class="{'active':st.actived}"><a @click="setStatus($index)" v-translate="st.title" ></a></li>
+                         <li :class="{'active':st.actived}"><a @click="setStatus($index)">{{$t(st.title)}}</a></li>
                   </template>
               </ul>
             </div>
@@ -12,7 +12,7 @@
     <!--
         <template v-for="st in status">
             <input name="group-status" type="radio" id="todo-{{st}}" @click="setStatus($index)" />
-            <label for="todo-{{st}}" v-translate="st"  ></label>
+            <label for="todo-{{st}}">{{$t(st)}}</label>
         </template> -->
     </section>
 </template>

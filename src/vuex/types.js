@@ -1,6 +1,7 @@
 
 export const REGISTER = 'REGISTER';
 export const LOGIN = 'LOGIN';
+export const LOGOUT = 'LOGOUT';
 export const ADD_TODO = 'ADD_TODO';
 export const DELETE_TODO_BY_ID = 'DELETE_TODO_BY_ID';
 export const UPDATE_TODO_BY_ID = 'UPDATE_TODO_BY_ID';
