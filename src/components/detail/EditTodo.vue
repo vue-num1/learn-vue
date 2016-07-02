@@ -24,7 +24,9 @@
                                 <input v-model="listData.text" lazy @keyup.enter="saveTodo" type="text" class="validate" placeholder="Title">
                             </div>
                         </div>
-                        <date-time-picker :update-times="onUpdateTimes"></date-time-picker>
+                        <div class="input-field col s12">
+                          <date-time-picker :update-times="onUpdateTimes"></date-time-picker>
+                        </div>
                         <div class="row">
                             <div class="input-field col s12">
                                 <textarea v-model="listData.content" class="materialize-textarea" length="360" placeholder="content"></textarea>
