@@ -3,10 +3,10 @@
         <div @click="closeEdit" class="black-bg"></div>
         <div>
             <section class="edit-todo">
-                <div class="edit-title bg-{{listData.color}}">Edittodo</div>
+                <div class="edit-title bg-{{todoItem.color}}">Edittodo</div>
                 <div class="types">
                     <div class="fixed-action-btn horizontal select-type">
-                        <a class="btn-floating btn-large  bg-{{listData.color}}">
+                        <a class="btn-floating btn-large  bg-{{todoItem.color}}">
                             <i class="large material-icons">mode_edit</i>
                         </a>
                         <ul>
@@ -21,7 +21,7 @@
                     <form class="col s12">
                         <div class="row">
                             <div class="input-field col s12">
-                                <input v-model="listData.text" lazy @keyup.enter="saveTodo" type="text" class="validate" placeholder="Title">
+                                <input v-model="todoItem.text" lazy @keyup.enter="saveTodo" type="text" class="validate" placeholder="Title">
                             </div>
                         </div>
                         <div class="input-field col s12">
@@ -29,12 +29,12 @@
                         </div>
                         <div class="row">
                             <div class="input-field col s12">
-                                <textarea v-model="listData.content" class="materialize-textarea" length="360" placeholder="content"></textarea>
+                                <textarea v-model="todoItem.content" class="materialize-textarea" length="360" placeholder="content"></textarea>
                             </div>
                         </div>
 
                         <div class="center-align">
-                            <button class="btn waves-effect waves-light bg-{{listData.color}}" type="submit" name="action" @click="saveAndClose">Submit
+                            <button class="btn waves-effect waves-light bg-{{todoItem.color}}" type="submit" name="action" @click="saveAndClose">Submit
                                 <i class="material-icons right">send</i>
                             </button>
                         </div>
@@ -96,11 +96,11 @@
             },
             saveTodo(){
                 const self = this;
-                if (_.isEmpty(self.listData.text)) {
+                if (_.isEmpty(self.todoItem.text)) {
                     self.$els.editinput.focus();
                     return;
                 }
-                self.updateTodoByIdAction(self.listData).then(function(isNew) {
+                self.updateTodoByIdAction(self.todoItem).then(function(isNew) {
                     self.setTopMsgAction(isNew ? '新增成功' : '更新成功');
                 }, function(errMsg) {
                     self.setTopMsgAction(errMsg);
@@ -111,7 +111,7 @@
               this.closeEdit();
             },
             changeColor(color){
-              this.listData.color=color;
+              this.todoItem.color=color;
               this.saveTodo();
             }
         },
