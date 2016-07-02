@@ -104,6 +104,7 @@ export default {
                 self.isAdding = false;
 
                 self.setTopMsgAction(isNew ? '新增成功' : '更新成功');
+                self.cleanTodo();
             }, function(errMsg) {
                 self.isAdding = false;
 
@@ -122,8 +123,11 @@ export default {
         disableEdit() {
             this.isEditMode = false;
         },
-        editTodo: function () {
+        editTodo() {
             this.$dispatch('editTodo',this.todoItem )
+        },
+        cleanTodo(){
+            this.todoItem=null;
         }
     },
     created(){
