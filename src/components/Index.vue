@@ -3,7 +3,7 @@
         <h1>Welcome!</h1>
 
         <div class="todo-author">
-            BY - <span v-translate="'authorTeam'"></span>: <span v-translate="'authorList'"></span>
+            BY - <span>{{$t('authorTeam')}}</span>: <span>{{$t('authorList')}}</span>
         </div>
     </div>
 </template>

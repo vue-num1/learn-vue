@@ -1,5 +1,5 @@
 <template>
-    <section  style="-webkit-user-select: none;padding: 10px 20px;">
+    <section  style="-webkit-user-select: none;padding: 10px 20px;" class="type type-{{todoItem.color}}">
         <div class="m-media">
             <div class="media-left media-middle">
                 <input type="checkbox" id="chk_{{todoId}}" class="filled-in" v-model="todoItem.done" />
@@ -10,7 +10,6 @@
                     <input
                         placeholder="todo content"
                         v-el:editinput :autofocus="!todoId" type="text" @keyup.enter="saveTodo" v-model="todoItem.text" lazy />
-                        <textarea v-model="todoItem.content" rows="4" @keyup.enter="saveTodo"></textarea>
                 </div>
                 <div :class="{'done-todo':todoItem.done}" v-else >
                     <div class="todoItem-title">{{todoItem.text}}</div>
@@ -18,10 +17,7 @@
                  </div>
             </div>
             <div class="media-right media-middle">
-                <span class="icon-time">
-
-                <date-picker :time.sync="todoItem.time" :option="timeoption"></date-picker>
-                </span>
+                <span @click="editTodo" class="icon-more ">
             </div>
         </div>
 
@@ -35,7 +31,8 @@ import moment from 'moment';
 import datePicker from 'vue-datepicker';
 import {
     updateTodoById as updateTodoByIdAction,
-    setTopMsg as setTopMsgAction
+    setTopMsg as setTopMsgAction,
+    updateEditmode as updateEditmodeAction
 } from '../../vuex/actions.js';
 
 
@@ -44,14 +41,15 @@ const initTodo = {
     text: '',
     content:'',
     done: false,
-    time: ''
+    time: '',
+    color:'red'
 };
 
 export default {
     name: 'TodoOne',
     mixins: [performance],
     vuex: {
-        actions: { updateTodoByIdAction, setTopMsgAction }
+        actions: { updateTodoByIdAction, setTopMsgAction ,updateEditmodeAction}
     },
     props: {
         todoId: {
@@ -123,6 +121,9 @@ export default {
         },
         disableEdit() {
             this.isEditMode = false;
+        },
+        editTodo: function () {
+            this.$dispatch('editTodo',this.todoItem )
         }
     },
     created(){

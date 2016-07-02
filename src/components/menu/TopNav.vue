@@ -1,33 +1,83 @@
 <template>
     <div class="top-nav language">
         <div class="logo">
-            <a v-if="!hasUser" v-link="{ name: 'index' }">todos</a>
+            <a v-link="{ name: 'index' }">{{$t('TODOS')}}</a>
         </div>
         <div class="user-menu">
-            <a v-if="!hasUser" v-link="{ name: 'detail' }">My Account</a>
-            <a v-if="!hasUser" v-link="{ name: 'login' }">Login</a>
-            <a v-if="!hasUser" v-link="{ name: 'register' }">Register</a>
-            |
-            <input id="lang-cn" v-model="language_" type="radio" v-bind:value="'CN'">
-            <label for="lang-cn">CN</label>
-            <input id="lang-en" v-model="language_" type="radio" v-bind:value="'EN'">
-            <label for="lang-en" >EN</label>
+            <div v-show="isLogining">{{formatMessage('infoTips', 'PLEASE WAIT...')}}</div>
+            <div v-else>
+                <span v-if="user.isLogin">
+                    <a v-link="{ name: 'detail' }">{{user.username}}</a>[<span class="fake-alink" @click="onLogout">{{$t('common.logout')}}</span>]
+                </span>
+                <span v-else>
+                    <a v-link="{ name: 'login' }">{{$t('common.login')}}</a>
+                    &nbsp;/&nbsp;
+                    <a v-link="{ name: 'register' }">{{$t('common.register')}}</a>
+                </span>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
-import { getUser } from '../../vuex/getters.js';
+import {t as formatMessage} from 'vue';
+
+import {
+    getUser as user
+} from '../../vuex/getters.js';
+import {
+    login as loginAction,
+    logout as logoutAction,
+    setTopMsg as setTopMsgAction
+} from '../../vuex/actions.js';
+import { getCookieByName } from '../../utils/other.js';
+import { checkUsername, checkPassword } from '../../utils/validator.js';
 
 
 export default {
     name: 'TopNav',
     vuex: {
-        getters: { getUser }
+        getters: { user },
+        actions: { loginAction, logoutAction, setTopMsgAction }
     },
-    computed: {
-        hasUser() {
-            return false;
+    data() {
+        return {
+            isLogining: true
+        };
+    },
+    created() {
+        const self = this;
+        const user = self.user;
+
+        if (user.isLogin) { return self.isLogining = false; }
+
+        const username = getCookieByName('todos_username');
+        const password = getCookieByName('todos_password');
+
+        if (!checkUsername(username).isOk || !checkPassword(password).isOk) {
+            // cookie 有问题，放弃后台自动登陆
+            return self.isLogining = false;
+        }
+
+        self.loginAction(username, password).then(function() {
+            self.isLogining = false;
+        }, function(errMsg) {
+            self.isLogining = false;
+        });
+    },
+    methods: {
+        formatMessage() {
+            let path = arguments[0];
+            for (let i = 1; i < arguments.length; i++) {
+                path += `['${arguments[i]}']`;
+            }
+            return formatMessage(path);
+        },
+        onLogout() {
+            const self = this;
+
+            self.logoutAction();
+            self.$router.go({ name: 'login' });
         }
     }
 };
