@@ -10,9 +10,9 @@
                         <li>
                             <span>{{$t('settings.language')}}</span>
                             <div class="right">
-                                <span class="pointer" :class="{ 'teal-text text-lighten-1': (lang=='zh-CN')}" @click="onLanguage('zh-CN')">中文</span>
+                                <span class="pointer" :class="{ 'teal-text text-lighten-1': (lang!='zh-CN')}" @click="onLanguage('zh-CN')">中文</span>
                                 &nbsp;/&nbsp;
-                                <span class="pointer" :class="{ 'teal-text text-lighten-1': (lang=='en-US')}" @click="onLanguage('en-US')">English</span>
+                                <span class="pointer" :class="{ 'teal-text text-lighten-1': (lang!='en-US')}" @click="onLanguage('en-US')">English</span>
                             </div>
                         </li>
                         <li>
@@ -81,7 +81,7 @@
     }
 
     .settingbox {
-        position: absolute;
+        position: fixed;
         bottom: 5rem;
         left: .5rem;
         width: 30rem;

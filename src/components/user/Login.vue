@@ -6,11 +6,11 @@
         <div class="row">
           <div class="input-field col s12">
             <input id="email" type="text" class="validate" v-model="username">
-            <label for="email">{{$t('common.username')}}</label>
+            <!-- <label for="email">{{$t('common.username')}}</label> -->
           </div>
           <div class="input-field col s12">
             <input id="password" type="password" class="validate" v-model="password">
-            <label for="password">{{$t('common.password')}}</label>
+            <!-- <label for="password">{{$t('common.password')}}</label> -->
           </div>
           <div class="s12">
             <div class="right-align">

@@ -1,6 +1,6 @@
 <template>
     <div class="app">
-        <div class="bg"></div>
+        <div class="bg" style="background-image:url('http://i.ws234.com/BingImg/{{imgid}}/')"></div>
         <top-msg></top-msg>
         <router-view></router-view>
         <top-nav></top-nav>
@@ -19,6 +19,13 @@ export default {
     store,
     components: {
         TopNav, TopMsg, Setting
+    },
+    data(){
+      return{
+        imgid: (Math.random() * 14 + 1).toFixed(0)
+
     }
+    }
+
 };
 </script>
