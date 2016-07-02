@@ -24,6 +24,7 @@
                                 <input v-model="listData.text" lazy @keyup.enter="saveTodo" type="text" class="validate" placeholder="Title">
                             </div>
                         </div>
+                        <date-time-picker :update-times="onUpdateTimes"></date-time-picker>
                         <div class="row">
                             <div class="input-field col s12">
                                 <textarea v-model="listData.content" class="materialize-textarea" length="360" placeholder="content"></textarea>
@@ -55,6 +56,7 @@
     import {
         getEditMode,
     } from '../../vuex/getters.js';
+    import DateTimePicker from '../lib/DateTimePicker.vue';
 
     const initTodo = {
         id: null,
@@ -83,6 +85,9 @@
             };
         },
         methods: {
+            onUpdateTimes(v) {
+                console.log('v = ', v);
+            },
             closeEdit(){
               this.$dispatch('closeEdit')
             },
@@ -106,7 +111,8 @@
               this.listData.color=color;
               this.saveTodo();
             }
-        }
+        },
+        components: { DateTimePicker }
     };
 </script>
 <style>
