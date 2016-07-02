@@ -6,58 +6,37 @@
                 <todo-one></todo-one>
             </li>
             <li class="collection-item" transition="expand" style="padding:0"
-                v-for="t in listData | filterBy filterStatus in 'done' | sortByStatus" track-by="$index">
+                v-for="t in listData | filterBy filterStatus in 'done' | filterBy typeFilter in 'color'  | sortByStatus" track-by="$index">
                 <div class="hoverable todo-container">
                     <todo-one :todo-item="t" :todo-id="t.id"></todo-one>
                     <i class="small material-icons" @click="removeTodo(t)" >close</i>
                 </div>
             </li>
         </ul>
-        <div class="color-type">
-          <div class="red"> </div>
-          <div class="yellow"> </div>
-          <div class="green"> </div>
-          <div class="blue"> </div>
-        </div>
+
+        <todo-types :filters="filters" :on-change-type=""></todo-types >
         <edit-todo :list-data="thisItemData" v-if="thisItemData"></todo-list>
-        <div class="lighten-3 tips-info">
-            <p>{{$t('editway')}}</p>
-            <p>{{$t('author')}}</p>
-        </div>
     </section>
 </template>
-<style>
-.color-type{
-  font-size: 0;
-  text-align: center;
-  vertical-align: middle;
-}
-.color-type div{
-  display:inline-block;
-  width:10%;
-  height: 10px;
-  opacity: .9;
-  transition: .5s;
-  cursor: pointer;
-}
-.color-type div:hover{
-  width: 20%;
-}
-</style>
 <script>
 import TodoOne from './TodoOne.vue';
 import TodoFilter from './TodoFilter.vue';
 import EditTodo from './EditTodo.vue';
+import TodoTypes from './TodoTypes.vue';
 import {
     deleteTodoById as deleteTodoByIdAction,
-    setTopMsg as setTopMsgAction
+    setTopMsg as setTopMsgAction,
+    updateFielter
 } from '../../vuex/actions.js';
 
 
 export default {
     name: 'TodoList',
     vuex: {
-        actions: { deleteTodoByIdAction, setTopMsgAction }
+        actions: { deleteTodoByIdAction, setTopMsgAction  },
+        getters: {
+            typeFilter: state => state.typeFilter
+        }
     },
     props: {
         listData: {
@@ -66,6 +45,7 @@ export default {
     },
     data(){
         return {
+            filters:['red','yellow','green','blue'],
             filterStatus: null,
             thisItemData: null
         };
@@ -100,7 +80,8 @@ export default {
     components: {
         TodoOne,
         TodoFilter,
-        EditTodo
+        EditTodo,
+        TodoTypes
     }
 };
 </script>

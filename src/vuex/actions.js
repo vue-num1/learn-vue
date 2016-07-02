@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 const Wilddog = require('wilddog');
 import {
-    REGISTER, UPDATE_TODO_LIST, UPDATE_TODO_BY_ID, DELETE_TODO_BY_ID, NEW_TOP_MSG, LOGIN,UPDATE_EDITMODE, LOGOUT
+    REGISTER, UPDATE_TODO_LIST, UPDATE_TODO_BY_ID, DELETE_TODO_BY_ID, NEW_TOP_MSG, LOGIN,UPDATE_EDITMODE, LOGOUT, UPDATE_FILTER_TYPE
 } from './types.js';
 // import router from '../index.js';
 import noticeJob from '../js/notice-job';
@@ -47,7 +47,7 @@ export const findUser = function({ dispatch, state }, username) {
 };
 
 export const login = function({ dispatch, state }, username, password) {
-    
+
     dispatch(LOGIN, { isTryToLogin: true, isLogin: false });
 
     return new Promise(function(resolve, reject) {
@@ -136,3 +136,6 @@ export const deleteTodoById = function({ dispatch, state }, todoInfo) {
         });
     });
 };
+export const updateFielter = ({dispatch},type) => {
+    dispatch(UPDATE_FILTER_TYPE, type);
+}

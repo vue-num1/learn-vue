@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 import {
-    REGISTER, LOGIN, UPDATE_TODO_LIST, UPDATE_TODO_BY_ID, DELETE_TODO_BY_ID, NEW_TOP_MSG,UPDATE_EDITMODE, LOGOUT
+    REGISTER, LOGIN, UPDATE_TODO_LIST, UPDATE_TODO_BY_ID, DELETE_TODO_BY_ID, NEW_TOP_MSG,UPDATE_EDITMODE, LOGOUT,UPDATE_FILTER_TYPE
 } from './types.js';
 import noticeJob from '../js/notice-job';
 import { getCookieByName } from '../utils/other.js';
@@ -29,10 +29,14 @@ export const state = {
      */
     topMsg: [],
     onSetting:false,
+    typeFilter: '',
     isEditMode:false
 };
 
 export const mutations = {
+    [UPDATE_FILTER_TYPE](state,filter){
+        state.typeFilter = filter;
+    },
     [UPDATE_EDITMODE](state) {
         state.isEditMode = !state.isEditMode;
     },
