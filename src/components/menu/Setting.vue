@@ -10,9 +10,9 @@
                         <li>
                             <span>{{$t('settings.language')}}</span>
                             <div class="right">
-                                <span class="teal-text text-lighten-1" @click="onLanguage('zh-CN')">中文</span>
+                                <span class="pointer" :class="{ 'teal-text text-lighten-1': (lang=='zh-CN')}" @click="onLanguage('zh-CN')">中文</span>
                                 &nbsp;/&nbsp;
-                                <span @click="onLanguage('en-US')">English</span>
+                                <span class="pointer" :class="{ 'teal-text text-lighten-1': (lang=='en-US')}" @click="onLanguage('en-US')">English</span>
                             </div>
                         </li>
                         <li>
@@ -43,7 +43,8 @@
         name: 'Setting',
         data: () => {
             return {
-                isedit: false
+                isedit: false,
+                lang:getCookieByName("todos_lang")
             }
         },
         methods: {
