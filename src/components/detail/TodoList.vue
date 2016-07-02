@@ -13,9 +13,8 @@
                 </div>
             </li>
         </ul>
-
         <todo-types :filters="filters" :on-change-type=""></todo-types >
-        <edit-todo :list-data="thisItemData" v-if="thisItemData"></todo-list>
+        <edit-todo :todo-item="thisItemData" v-if="thisItemData"></todo-list>
     </section>
 </template>
 <script>

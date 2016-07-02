@@ -1,6 +1,6 @@
 <template>
     <div class="app">
-        <div class="bg" style="background-image:url('http://i.ws234.com/BingImg/{{imgid}}/')"></div>
+        <div class="bg" :style="{ 'background-image': 'url(\'http://i.ws234.com/BingImg/' + imgid + '/\')' }"></div>
         <top-msg></top-msg>
         <router-view></router-view>
         <top-nav></top-nav>

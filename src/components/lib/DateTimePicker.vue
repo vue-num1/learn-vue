@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import _ from 'lodash';
+
 require('./jquery.datetimepicker.full.js');
 require('./jquery.datetimepicker.full.css');
 
@@ -14,8 +16,12 @@ export default {
     props: {
         times: {
             type: Number,
-            // 默认一个小时后提醒
-            default() { return Date.now() + 1000 * 60 * 60; }
+            coerce(times) {
+                // 默认一个小时后提醒
+                return _.isNumber(times) && times > 0 ?
+                    times :
+                    Date.now() + 1000 * 60 * 60;
+            }
         },
         updateTimes: {
             type: Function,

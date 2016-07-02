@@ -25,7 +25,7 @@
                             </div>
                         </div>
                         <div class="input-field col s12">
-                          <date-time-picker :update-times="onUpdateTimes"></date-time-picker>
+                          <date-time-picker :times="todoItem.times" :update-times="onUpdateTimes"></date-time-picker>
                         </div>
                         <div class="row">
                             <div class="input-field col s12">
@@ -74,7 +74,7 @@
             actions: { updateTodoByIdAction, setTopMsgAction ,updateEditmodeAction}
         },
         props:{
-          listData: {
+          todoItem: {
               type: Object,
               default() {
                   return _.cloneDeep(initTodo).id;
@@ -87,8 +87,9 @@
             };
         },
         methods: {
-            onUpdateTimes(v) {
-                console.log('v = ', v);
+            onUpdateTimes(times) {
+                todoItem.times = times;
+                // console.log('v = ', v);
             },
             closeEdit(){
               this.$dispatch('closeEdit')
